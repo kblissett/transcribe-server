@@ -1,0 +1,54 @@
+{% extends 'transcribe/base.html' %}
+{% load static %}
+
+{% block title %}Audio Recorder - Transcribe{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'transcribe/css/record.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="recorder-card">
+        <h1>Audio Recorder</h1>
+        <p class="subtitle">Click the microphone to start recording</p>
+
+        <div class="recorder-section">
+            <button id="recordBtn" class="record-button" aria-label="Start/Stop Recording">
+                <svg class="mic-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                        d="M12 2c1.1 0 2 .9 2 2v6c0 1.1-.9 2-2 2s-2-.9-2-2V4c0-1.1.9-2 2-2zm-1 16.93c3.94-.49 7-3.85 7-7.93h-2c0 2.76-2.24 5-5 5s-5-2.24-5-5H4c0 4.08 3.05 7.44 7 7.93V22h2v-3.07z" />
+                </svg>
+            </button>
+
+            <div class="status-text" id="statusText">Ready to record</div>
+
+            <div class="timer" id="timer" style="display: none;">
+                <span id="timerDisplay">00:00</span>
+            </div>
+        </div>
+
+        <div class="audio-section" id="audioSection" style="display: none;">
+            <h3>Recorded Audio:</h3>
+            <audio id="audioPlayer" controls></audio>
+            <div class="audio-actions">
+                <button id="downloadBtn" class="action-btn download-btn">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" />
+                    </svg>
+                    Download
+                </button>
+                <button id="newRecordingBtn" class="action-btn secondary-btn">
+                    New Recording
+                </button>
+            </div>
+        </div>
+
+        <div class="error-message" id="errorMessage" style="display: none;"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'transcribe/js/record.js' %}"></script>
+{% endblock %}
