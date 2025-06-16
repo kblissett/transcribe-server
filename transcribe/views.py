@@ -64,7 +64,9 @@ def transcribe_audio(request):
             # Open the audio file and transcribe
             with open(temp_file_path, "rb") as audio_file_handle:
                 transcript = client.audio.transcriptions.create(
-                    model="whisper-1", file=audio_file_handle, response_format="text"
+                    model="gpt-4o-transcribe",
+                    file=audio_file_handle,
+                    response_format="text",
                 )
 
             return JsonResponse({"success": True, "transcription": transcript})

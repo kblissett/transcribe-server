@@ -6,7 +6,7 @@ Transcribe Server is a Django application that lets you record audio in the brow
 
 - Modern web UI built with Django templates and static assets
 - Client side audio recorder implemented in JavaScript
-- Uploads the recording and returns the transcription using the `whisper-1` model
+- Uploads the recording and returns the transcription using the `gpt-4o-transcribe` model
 
 ## Requirements
 
