@@ -7,6 +7,7 @@ class AudioRecorder {
         this.stream = null;
         this.startTime = null;
         this.timerInterval = null;
+        this.staticUrl = '/static/transcribe/icons/';
 
         this.initializeElements();
         this.attachEventListeners();
@@ -19,15 +20,22 @@ class AudioRecorder {
         this.timerDisplay = document.getElementById('timerDisplay');
         this.audioSection = document.getElementById('audioSection');
         this.audioPlayer = document.getElementById('audioPlayer');
+        this.transcribeBtn = document.getElementById('transcribeBtn');
         this.downloadBtn = document.getElementById('downloadBtn');
         this.newRecordingBtn = document.getElementById('newRecordingBtn');
         this.errorMessage = document.getElementById('errorMessage');
+        this.transcriptionSection = document.getElementById('transcriptionSection');
+        this.transcriptionLoading = document.getElementById('transcriptionLoading');
+        this.transcriptionText = document.getElementById('transcriptionText');
+        this.copyTranscriptionBtn = document.getElementById('copyTranscriptionBtn');
     }
 
     attachEventListeners() {
         this.recordBtn.addEventListener('click', () => this.toggleRecording());
+        this.transcribeBtn.addEventListener('click', () => this.transcribeAudio());
         this.downloadBtn.addEventListener('click', () => this.downloadAudio());
         this.newRecordingBtn.addEventListener('click', () => this.startNewRecording());
+        this.copyTranscriptionBtn.addEventListener('click', () => this.copyTranscription());
     }
 
     async toggleRecording() {
@@ -182,6 +190,7 @@ class AudioRecorder {
         this.statusText.textContent = 'Ready to record';
         this.timerDisplay.textContent = '00:00';
         this.audioSection.style.display = 'none';
+        this.transcriptionSection.style.display = 'none';
         this.hideError();
 
         // Clean up previous recording
@@ -192,6 +201,101 @@ class AudioRecorder {
 
         this.audioBlob = null;
         this.audioChunks = [];
+        this.transcriptionText.textContent = '';
+        this.copyTranscriptionBtn.style.display = 'none';
+    }
+
+    async transcribeAudio() {
+        if (!this.audioBlob) {
+            this.showError('No audio recording available to transcribe.');
+            return;
+        }
+
+        try {
+            // Show loading state
+            this.transcriptionSection.style.display = 'block';
+            this.transcriptionLoading.style.display = 'flex';
+            this.transcriptionText.textContent = '';
+            this.copyTranscriptionBtn.style.display = 'none';
+            this.transcribeBtn.disabled = true;
+            this.transcribeBtn.textContent = 'Transcribing...';
+
+            // Create FormData and append the audio file
+            const formData = new FormData();
+            formData.append('audio', this.audioBlob, 'recording.webm');
+
+            // Get CSRF token
+            const csrfToken = this.getCSRFToken();
+
+            // Send transcription request
+            const response = await fetch('/transcribe/', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': csrfToken,
+                },
+            });
+
+            const result = await response.json();
+
+            if (response.ok && result.success) {
+                // Display transcription
+                this.transcriptionText.textContent = result.transcription;
+                this.copyTranscriptionBtn.style.display = 'inline-flex';
+                this.hideError();
+            } else {
+                throw new Error(result.error || 'Transcription failed');
+            }
+
+        } catch (error) {
+            console.error('Transcription error:', error);
+            this.showError(`Transcription failed: ${error.message}`);
+        } finally {
+            // Hide loading state
+            this.transcriptionLoading.style.display = 'none';
+            this.transcribeBtn.disabled = false;
+            this.transcribeBtn.innerHTML = `
+                <img src="${this.staticUrl}transcribe.svg" alt="Transcribe">
+                Transcribe
+            `;
+        }
+    }
+
+    async copyTranscription() {
+        try {
+            await navigator.clipboard.writeText(this.transcriptionText.textContent);
+
+            // Temporarily change button text to show success
+            const originalContent = this.copyTranscriptionBtn.innerHTML;
+            this.copyTranscriptionBtn.innerHTML = `
+                <img src="${this.staticUrl}check.svg" alt="Copied">
+                Copied!
+            `;
+
+            setTimeout(() => {
+                this.copyTranscriptionBtn.innerHTML = originalContent;
+            }, 2000);
+
+        } catch (error) {
+            console.error('Copy failed:', error);
+            this.showError('Failed to copy transcription to clipboard.');
+        }
+    }
+
+    getCSRFToken() {
+        // Get CSRF token from meta tag or cookie
+        const metaTag = document.querySelector('meta[name="csrf-token"]');
+        if (metaTag) {
+            return metaTag.getAttribute('content');
+        }
+
+        // Fallback to cookie
+        const cookieValue = document.cookie
+            .split('; ')
+            .find(row => row.startsWith('csrftoken='))
+            ?.split('=')[1];
+
+        return cookieValue || '';
     }
 
     showError(message) {

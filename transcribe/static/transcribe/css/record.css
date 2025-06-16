@@ -90,6 +90,20 @@ h1 {
 .mic-icon {
     width: 40px;
     height: 40px;
+    filter: brightness(0) invert(1);
+    /* Makes the icon white */
+}
+
+.action-btn img {
+    width: 18px;
+    height: 18px;
+    filter: brightness(0) invert(1);
+    /* Makes icons white for colored buttons */
+}
+
+.secondary-btn img {
+    filter: brightness(0) saturate(0) brightness(0.4);
+    /* Makes icons gray for secondary buttons */
 }
 
 .status-text {
@@ -151,11 +165,6 @@ h1 {
     gap: 8px;
 }
 
-.action-btn svg {
-    width: 18px;
-    height: 18px;
-}
-
 .download-btn {
     background: linear-gradient(135deg, #42a5f5, #1e88e5);
     color: white;
@@ -165,6 +174,17 @@ h1 {
     background: linear-gradient(135deg, #1e88e5, #1565c0);
     transform: translateY(-2px);
     box-shadow: 0 8px 20px rgba(66, 165, 245, 0.3);
+}
+
+.primary-btn {
+    background: linear-gradient(135deg, #4caf50, #2e7d32);
+    color: white;
+}
+
+.primary-btn:hover {
+    background: linear-gradient(135deg, #2e7d32, #1b5e20);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
 }
 
 .secondary-btn {
@@ -188,6 +208,75 @@ h1 {
     border-left: 4px solid #ef5350;
 }
 
+.transcription-section {
+    border-top: 1px solid #eee;
+    padding-top: 30px;
+    margin-top: 30px;
+}
+
+.transcription-section h3 {
+    color: #333;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.transcription-content {
+    text-align: left;
+}
+
+.loading-spinner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    padding: 30px;
+    color: #666;
+    font-size: 1rem;
+}
+
+.spinner {
+    width: 24px;
+    height: 24px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #4caf50;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.transcription-text {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    line-height: 1.6;
+    font-size: 1rem;
+    color: #333;
+    min-height: 100px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.transcription-text:empty {
+    display: none;
+}
+
+.transcription-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
 /* Responsive design */
 @media (max-width: 480px) {
     .recorder-card {
@@ -206,6 +295,8 @@ h1 {
     .mic-icon {
         width: 35px;
         height: 35px;
+        filter: brightness(0) invert(1);
+        /* Ensure icon stays white on mobile */
     }
 
     .audio-actions {

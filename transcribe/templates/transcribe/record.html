@@ -15,10 +15,7 @@
 
         <div class="recorder-section">
             <button id="recordBtn" class="record-button" aria-label="Start/Stop Recording">
-                <svg class="mic-icon" viewBox="0 0 24 24" fill="currentColor">
-                    <path
-                        d="M12 2c1.1 0 2 .9 2 2v6c0 1.1-.9 2-2 2s-2-.9-2-2V4c0-1.1.9-2 2-2zm-1 16.93c3.94-.49 7-3.85 7-7.93h-2c0 2.76-2.24 5-5 5s-5-2.24-5-5H4c0 4.08 3.05 7.44 7 7.93V22h2v-3.07z" />
-                </svg>
+                <img src="{% static 'transcribe/icons/microphone.svg' %}" class="mic-icon" alt="Microphone">
             </button>
 
             <div class="status-text" id="statusText">Ready to record</div>
@@ -32,15 +29,34 @@
             <h3>Recorded Audio:</h3>
             <audio id="audioPlayer" controls></audio>
             <div class="audio-actions">
+                <button id="transcribeBtn" class="action-btn primary-btn">
+                    <img src="{% static 'transcribe/icons/transcribe.svg' %}" alt="Transcribe">
+                    Transcribe
+                </button>
                 <button id="downloadBtn" class="action-btn download-btn">
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" />
-                    </svg>
+                    <img src="{% static 'transcribe/icons/download.svg' %}" alt="Download">
                     Download
                 </button>
                 <button id="newRecordingBtn" class="action-btn secondary-btn">
                     New Recording
                 </button>
+            </div>
+        </div>
+
+        <div class="transcription-section" id="transcriptionSection" style="display: none;">
+            <h3>Transcription:</h3>
+            <div class="transcription-content">
+                <div id="transcriptionLoading" class="loading-spinner" style="display: none;">
+                    <div class="spinner"></div>
+                    <span>Transcribing audio...</span>
+                </div>
+                <div id="transcriptionText" class="transcription-text"></div>
+                <div class="transcription-actions">
+                    <button id="copyTranscriptionBtn" class="action-btn secondary-btn" style="display: none;">
+                        <img src="{% static 'transcribe/icons/copy.svg' %}" alt="Copy">
+                        Copy Text
+                    </button>
+                </div>
             </div>
         </div>
 
