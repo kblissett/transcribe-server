@@ -12,7 +12,7 @@ Transcribe Server is a Django application that lets you record audio in the brow
 
 - Python 3.13+
 - An [OpenAI](https://openai.com/) API key set in the `OPENAI_API_KEY` environment variable
-- The [`uv`](https://github.com/astral-sh/uv) package manager (or `pip`) to install dependencies
+- The [`uv`](https://github.com/astral-sh/uv) package manager to install dependencies
 
 ## Installation
 
@@ -21,7 +21,7 @@ Transcribe Server is a Django application that lets you record audio in the brow
 3. Install dependencies:
 
 ```bash
-uv pip install -e .
+uv sync
 ```
 
 4. Apply database migrations and start the development server:
